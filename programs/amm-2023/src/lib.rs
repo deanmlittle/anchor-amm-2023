@@ -6,7 +6,7 @@ mod constants;
 mod state;
 mod errors;
 
-declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
+declare_id!("GiVFHELhmrVa7sMGZUcG52M3rfqzPXNsZ9AokuKD8Tmy");
 
 #[program]
 pub mod amm_2023 {
@@ -44,12 +44,13 @@ pub mod amm_2023 {
         ctx.accounts.withdraw(amount, min_x, min_y, expiration)
     }
 
-    // pub fn swap(
-    //     ctx: Context<Swap>,
-    //     amount: u64, // Amount of tokens to deposit
-    //     min: u64, // Minimum expected amount in return
-    //     expiration: i64,
-    // ) -> Result<()> {
-    //     ctx.accounts.swap(deposit, min, expiration)
-    // }
+    pub fn swap(
+        ctx: Context<Swap>,
+        is_x: bool,
+        amount: u64, // Amount of tokens to deposit
+        min: u64, // Minimum expected amount in return
+        expiration: i64,
+    ) -> Result<()> {
+        ctx.accounts.swap(is_x, amount, min, expiration)
+    }
 }

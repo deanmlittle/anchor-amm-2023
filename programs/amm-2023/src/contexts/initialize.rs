@@ -60,6 +60,8 @@ impl<'info> Initialize<'info> {
         fee: u16,
         authority: Option<Pubkey>        
     ) -> Result<()> {
+        // We don't want to charge >100.00% as a fee
+        require!(fee <= 10000, AmmError::InvalidFee);
         let (auth_bump, config_bump, lp_bump) = (
             *bumps.get("auth").ok_or(AmmError::BumpError)?,
             *bumps.get("config").ok_or(AmmError::BumpError)?,

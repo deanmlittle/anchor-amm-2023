@@ -20,4 +20,8 @@ pub enum AmmError {
     NoLiquidityInPool,
     #[msg("Bump error.")]
     BumpError,
+    #[msg("Curve error.")]
+    CurveError,
+    #[msg("Fee is greater than 100%. This is not a very good deal.")]
+    InvalidFee
 }

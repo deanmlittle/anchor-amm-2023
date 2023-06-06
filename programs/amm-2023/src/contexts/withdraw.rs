@@ -116,12 +116,12 @@ impl<'info> Withdraw<'info> {
             &[self.config.auth_bump],
         ];
 
-        let signer = &[&seeds[..]];
+        let signer_seeds = &[&seeds[..]];
 
         let ctx = CpiContext::new_with_signer(
             self.token_program.to_account_info(), 
             cpi_accounts,
-            signer
+            signer_seeds
         );
         transfer(ctx, amount)
     }

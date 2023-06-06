@@ -116,7 +116,7 @@ impl<'info> Deposit<'info> {
         &self,
         amount:u64
     ) -> Result<()> {        
-        let cpi_accounts = MintTo {
+        let accounts = MintTo {
             mint: self.mint_lp.to_account_info(),
             to: self.user_lp.to_account_info(),
             authority: self.auth.to_account_info(),
@@ -127,12 +127,12 @@ impl<'info> Deposit<'info> {
             &[self.config.auth_bump],
         ];
 
-        let signer = &[&seeds[..]];
+        let signer_seeds = &[&seeds[..]];
 
         let ctx = CpiContext::new_with_signer(
             self.token_program.to_account_info(), 
-            cpi_accounts,
-        signer
+            accounts,
+        signer_seeds
         );
         mint_to(ctx, amount)
     }
