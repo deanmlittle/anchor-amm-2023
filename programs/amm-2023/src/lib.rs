@@ -10,7 +10,7 @@ mod helpers;
 declare_id!("GiVFHELhmrVa7sMGZUcG52M3rfqzPXNsZ9AokuKD8Tmy");
 
 #[program]
-pub mod amm_2023 {
+pub mod anchor_amm_2023 {
     use super::*;
 
     pub fn initialize(

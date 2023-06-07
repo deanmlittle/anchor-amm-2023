@@ -2,7 +2,7 @@
 seeds = false
 skip-lint = false
 [programs.localnet]
-amm_2023 = "GiVFHELhmrVa7sMGZUcG52M3rfqzPXNsZ9AokuKD8Tmy"
+anchor_amm_2023 = "GiVFHELhmrVa7sMGZUcG52M3rfqzPXNsZ9AokuKD8Tmy"
 
 [registry]
 url = "https://api.apr.dev"

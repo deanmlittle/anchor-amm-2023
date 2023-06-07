@@ -59,7 +59,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "amm-2023"
+name = "anchor-amm-2023"
 version = "0.1.0"
 dependencies = [
  "anchor-lang",

@@ -1,7 +1,7 @@
 import * as anchor from "@coral-xyz/anchor";
 import { BN } from "@coral-xyz/anchor"
 import { Program } from "@coral-xyz/anchor";
-import { Amm2023, IDL } from "../target/types/amm_2023"
+import { AnchorAmm2023, IDL } from "../target/types/anchor_amm_2023"
 import { ConstantProduct, LiquidityPair } from "constant-product-curve-wasm";
 import { PublicKey, Commitment, Keypair, SystemProgram } from "@solana/web3.js"
 import { ASSOCIATED_TOKEN_PROGRAM_ID as associatedTokenProgram, TOKEN_PROGRAM_ID as tokenProgram, createMint, createAccount, mintTo, getAssociatedTokenAddress, TOKEN_PROGRAM_ID } from "@solana/spl-token"
@@ -11,12 +11,12 @@ import { ASSOCIATED_PROGRAM_ID } from "@coral-xyz/anchor/dist/cjs/utils/token";
 
 const commitment: Commitment = "confirmed"; // processed, confirmed, finalized
 
-describe("amm-2023", () => {
+describe("anchor-amm-2023", () => {
   // Configure the client to use the local cluster.
   anchor.setProvider(anchor.AnchorProvider.env());
 
   const programId = new PublicKey("GiVFHELhmrVa7sMGZUcG52M3rfqzPXNsZ9AokuKD8Tmy");
-  const program = new anchor.Program<Amm2023>(IDL, programId, anchor.getProvider());
+  const program = new anchor.Program<AnchorAmm2023>(IDL, programId, anchor.getProvider());
 
   // Set up our keys
   const [initializer, user] = [new Keypair(), new Keypair()];
