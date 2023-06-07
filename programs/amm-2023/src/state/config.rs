@@ -15,6 +15,8 @@ pub struct Config {
 }
 
 impl Config {
+    pub const LEN: usize = 8 + U64_L + OPTION_L + (PUBKEY_L * 3) + U16_L + BOOL_L + (U8_L * 3);
+
     pub fn init(
         &mut self, 
         seed: u64, 
@@ -25,7 +27,7 @@ impl Config {
         auth_bump: u8,
         config_bump: u8,
         lp_bump: u8
-    ) -> Result<()> {
+    ) {
         self.seed = seed;
         self.authority = authority;
         self.mint_x = mint_x;
@@ -35,8 +37,5 @@ impl Config {
         self.auth_bump = auth_bump;
         self.config_bump = config_bump;
         self.lp_bump = lp_bump;
-        Ok(())
     }
-
-    pub const LEN: usize = 8 + U64_L + OPTION_L + PUBKEY_L * 3 + U16_L + BOOL_L + U8_L * 3;
 }

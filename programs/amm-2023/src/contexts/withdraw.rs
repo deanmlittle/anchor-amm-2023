@@ -2,6 +2,8 @@ use anchor_lang::prelude::*;
 use anchor_spl::token::{Mint, Token, TokenAccount, Transfer, transfer, burn, Burn};
 use anchor_spl::associated_token::AssociatedToken;
 use constant_product_curve::ConstantProduct;
+use solana_program::log;
+use crate::{assert_not_locked, assert_not_expired, assert_non_zero};
 use crate::state::config::Config;
 use crate::errors::AmmError;
 
@@ -9,12 +11,13 @@ use crate::errors::AmmError;
 pub struct Withdraw<'info> {
     #[account(mut)]
     pub user: Signer<'info>,
+    pub mint_x: Box<Account<'info, Mint>>,
+    pub mint_y: Box<Account<'info, Mint>>,
     #[account(
+        mut,
         seeds = [b"lp", config.key().as_ref()],
         bump = config.lp_bump
     )]
-    pub mint_x: Box<Account<'info, Mint>>,
-    pub mint_y: Box<Account<'info, Mint>>,
     pub mint_lp: Box<Account<'info, Mint>>,
     #[account(
         mut,
@@ -50,7 +53,7 @@ pub struct Withdraw<'info> {
     pub user_lp: Box<Account<'info, TokenAccount>>,
     
     /// CHECK: just a pda for signing
-    #[account(seeds = [b"auth"], bump)]
+    #[account(seeds = [b"auth"], bump = config.auth_bump)]
     pub auth: UncheckedAccount<'info>,
     #[account(
         has_one = mint_x,
@@ -75,21 +78,21 @@ impl<'info> Withdraw<'info> {
         min_y: u64, // Min amount of Y we are willing to withdraw
         expiration: i64,
     ) -> Result<()> {
-        require!(!self.config.locked, AmmError::PoolLocked);
-        require!(Clock::get()?.unix_timestamp > expiration, AmmError::OfferExpired);
-        let amounts = match ConstantProduct::xy_withdraw_amounts_from_l(
+        assert_not_locked!(self.config.locked);
+        assert_not_expired!(expiration);
+        assert_non_zero!([amount]);
+
+        let amounts = ConstantProduct::xy_withdraw_amounts_from_l(
             self.vault_x.amount,
             self.vault_y.amount,
             self.mint_lp.supply,
             amount,
             6
-        ) {
-            Ok(a) => a,
-            Err(_) => return err!(AmmError::Overflow)
-        };
+        ).map_err(AmmError::from)?;
 
         // Check for slippage
-        require!(amounts.x >= min_x && amounts.y >= min_y, AmmError::SlippageExceeded);
+        require!(min_x <= amounts.x && min_y <= amounts.y, AmmError::SlippageExceeded);
+        
         self.withdraw_tokens(true, amounts.x)?;
         self.withdraw_tokens(false, amounts.y)?;
         self.burn_lp_tokens(amount)
