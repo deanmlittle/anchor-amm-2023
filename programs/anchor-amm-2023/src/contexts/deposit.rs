@@ -88,7 +88,7 @@ impl<'info> Deposit<'info> {
                     self.vault_y.amount,
                     self.mint_lp.supply,
                     amount,
-                    6
+                    1_000_000, // mint_lp's scaled decimal precision
                 ).map_err(AmmError::from)?;
                 (amounts.x, amounts.y)
             }
